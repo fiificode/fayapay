@@ -9,6 +9,14 @@ import { demo } from "@/content/site";
 import { PhoneFrame } from "./phone-frame";
 
 const hidden = "invisible opacity-0";
+// Still rings behind the phone, fainter the further out they are.
+const backdropRings = [
+  { size: "clamp(22rem, 62vw, 34rem)", opacity: 0.16 },
+  { size: "clamp(32rem, 92vw, 52rem)", opacity: 0.12 },
+  { size: "clamp(44rem, 128vw, 74rem)", opacity: 0.09 },
+  { size: "clamp(58rem, 170vw, 100rem)", opacity: 0.065 },
+  { size: "clamp(74rem, 220vw, 130rem)", opacity: 0.045 },
+];
 const tiles = [
   "bg-[#2E7D32] text-white",
   "bg-[#10251A] text-white",
@@ -42,6 +50,7 @@ export function UssdDemo({ children }: { children: ReactNode }) {
           const dial = q("[data-dial]");
           const dialChars = q("[data-dial] [data-char]");
           const rings = q("[data-ring]");
+          const ripples = q("[data-ripple]");
 
           const amount = { v: demo.balance };
           const paint = () => {
@@ -52,6 +61,7 @@ export function UssdDemo({ children }: { children: ReactNode }) {
           gsap.set(q("[data-pop]"), { y: 14, scale: 0.96 });
           gsap.set(q("[data-result]"), { y: 30, scale: 0.94 });
           gsap.set(dial, { scale: 0.8 });
+          gsap.set(ripples, { autoAlpha: 0 });
 
           const starts: number[] = [];
           let current = -1;
@@ -91,6 +101,7 @@ export function UssdDemo({ children }: { children: ReactNode }) {
               .to(tile, { scale: 1, duration: 0.3, ease: "power3.out" })
               .to(scrim, { autoAlpha: 1, duration: 0.25 })
               .to(dial, { autoAlpha: 1, scale: 1, duration: 0.35, ease: "power3.out" }, "<")
+              .addLabel(`dial${f}`)
               .to(dialChars, { autoAlpha: 1, duration: 0.01, stagger: 0.09 })
               .fromTo(
                 rings,
@@ -133,6 +144,14 @@ export function UssdDemo({ children }: { children: ReactNode }) {
               .to(outcome, { autoAlpha: 1, y: 0, duration: 0.35, ease: "power3.out" }, "<0.1")
               .to({}, { duration: 1.7 })
               .to(result, { autoAlpha: 0, y: 30, scale: 0.94, duration: 0.3, ease: "power2.in" });
+
+            // The dial sends a signal out across the hero, behind everything.
+            tl.fromTo(
+              ripples,
+              { scale: 0.16, autoAlpha: 0.65 },
+              { scale: 1, autoAlpha: 0, duration: 2.4, stagger: 0.3, ease: "power2.out", immediateRender: false },
+              `dial${f}+=0.2`,
+            );
           });
 
           timeline.current = tl;
@@ -142,7 +161,7 @@ export function UssdDemo({ children }: { children: ReactNode }) {
 
           // Don't run where nobody is looking.
           const trigger = ScrollTrigger.create({
-            trigger: q("[data-phone]")[0],
+            trigger: root.current,
             start: "top bottom",
             end: "bottom top",
             onToggle: (self) => {
@@ -268,7 +287,37 @@ export function UssdDemo({ children }: { children: ReactNode }) {
           your balance.
         </p>
         {/* The phone rises out of the bottom of the hero. */}
-        <div data-rise className="mt-8 h-[min(31rem,118vw)] sm:mt-10 sm:h-[34rem]">
+        <div data-rise className="relative mt-8 h-[min(31rem,118vw)] sm:mt-10 sm:h-[34rem]">
+          {/* Behind the phone: a soft glow, still rings, and the ripples each dial sends out. */}
+          <div aria-hidden className="pointer-events-none absolute top-[42%] left-1/2 -z-10">
+            <span className="absolute size-[46rem] -translate-1/2 rounded-full bg-[radial-gradient(closest-side,color-mix(in_srgb,var(--primary)_24%,transparent),transparent)] sm:size-[64rem]" />
+          </div>
+          {/*
+            The rings are confined to the band beside the phone and fade in from
+            its top edge, so no line ever crosses the copy or the flow picker.
+          */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-y-0 left-1/2 -z-10 w-screen -translate-x-1/2 overflow-hidden [mask-image:linear-gradient(transparent_1rem,black_9rem)]"
+          >
+            <div className="absolute top-[42%] left-1/2">
+              {backdropRings.map((ring) => (
+                <span
+                  key={ring.size}
+                  className="absolute -translate-1/2 rounded-full border border-foreground"
+                  style={{ width: ring.size, height: ring.size, opacity: ring.opacity }}
+                />
+              ))}
+              {[0, 1, 2].map((ripple) => (
+                <span key={ripple} className="absolute -translate-1/2">
+                  <span
+                    data-ripple
+                    className={cn("block size-[70rem] rounded-full border-2 border-primary sm:size-[110rem]", hidden)}
+                  />
+                </span>
+              ))}
+            </div>
+          </div>
         <PhoneFrame className="@container w-[min(19rem,78vw)] sm:w-[21rem]">
           <div data-phone aria-hidden className="absolute inset-0 text-[3.7cqw] leading-tight text-[#10251A] select-none">
             {/* The app's home screen */}

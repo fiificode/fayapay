@@ -6,9 +6,9 @@ import { UssdDemo } from "@/components/ussd-demo";
 
 export function Hero() {
   return (
-    <section className="overflow-hidden bg-soft">
+    <section className="relative isolate overflow-hidden bg-[linear-gradient(var(--background),var(--soft)_60%)]">
       <UssdDemo>
-        <div className="mx-auto max-w-[58rem] text-center">
+        <div className="relative z-10 mx-auto max-w-[58rem] text-center">
           <p aria-hidden className="font-mono text-[clamp(1.5rem,4vw,2.25rem)] leading-none font-bold text-muted-foreground/60">
             <span className="relative inline-block">
               {hero.code}
