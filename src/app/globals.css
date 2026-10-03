@@ -1,0 +1,404 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: var(--font-ubuntu), system-ui, sans-serif;
+  --font-mono: var(--font-ubuntu-mono), ui-monospace, monospace;
+  --font-heading: var(--font-ubuntu), system-ui, sans-serif;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* FayaPay tokens beyond shadcn's set */
+  --color-brand: var(--brand);
+  --color-brand-deep: var(--brand-deep);
+  --color-highlight: var(--highlight);
+  --color-soft: var(--soft);
+  --color-deep: var(--deep);
+  --color-on-deep: var(--on-deep);
+  --color-on-deep-muted: var(--on-deep-muted);
+  --color-credit: var(--credit);
+  --color-debit: var(--debit);
+  --color-bezel: var(--bezel);
+  --color-thumb: var(--thumb);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/*
+ * Surfaces and text are neutral: white, a cool light grey and near-black, as
+ * on apple.com. FayaPay's green is the accent, used for actions and marks.
+ */
+:root {
+  --background: #ffffff;
+  --foreground: #1d1d1f;
+  --card: #ffffff;
+  --card-foreground: #1d1d1f;
+  --popover: #ffffff;
+  --popover-foreground: #1d1d1f;
+  --primary: #2e7d32;
+  --primary-foreground: #ffffff;
+  --secondary: #e8e8ed;
+  --secondary-foreground: #1d1d1f;
+  --muted: #f5f5f7;
+  --muted-foreground: #6e6e73;
+  --accent: #e8e8ed;
+  --accent-foreground: #1d1d1f;
+  --destructive: #b3261e;
+  --border: #d2d2d7;
+  --input: #c7c7cc;
+  --ring: #2e7d32;
+  --radius: 0.875rem;
+
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+
+  --brand: #2e7d32;
+  --brand-deep: #1e5a24;
+  --highlight: #a5d6a7;
+  --soft: #f5f5f7;
+  --thumb: #ffffff;
+  --deep: #000000;
+  --on-deep: #f5f5f7;
+  --on-deep-muted: #a1a1a6;
+  --credit: #1e6b32;
+  --debit: #b3261e;
+  --bezel: #1d1d1f;
+}
+
+.dark {
+  --background: #000000;
+  --foreground: #f5f5f7;
+  --card: #1d1d1f;
+  --card-foreground: #f5f5f7;
+  --popover: #1d1d1f;
+  --popover-foreground: #f5f5f7;
+  --primary: #4caf50;
+  --primary-foreground: #06140b;
+  --secondary: #2c2c2e;
+  --secondary-foreground: #f5f5f7;
+  --muted: #161617;
+  --muted-foreground: #a1a1a6;
+  --accent: #2c2c2e;
+  --accent-foreground: #f5f5f7;
+  --destructive: #f08a7e;
+  --border: #333336;
+  --input: #48484a;
+  --ring: #4caf50;
+
+  --highlight: #5e9b62;
+  --soft: #161617;
+  --thumb: #636366;
+  --deep: #000000;
+  --credit: #6fcf8a;
+  --debit: #f08a7e;
+  --bezel: #3a3a3c;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+    scroll-padding-top: 4rem;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+  p,
+  li {
+    text-wrap: pretty;
+  }
+  ::selection {
+    background: var(--highlight);
+    color: #1d1d1f;
+  }
+}
+
+@layer components {
+  /* The flame logo as a mask, so it takes the surrounding text colour. */
+  .flame {
+    display: inline-block;
+    aspect-ratio: 240 / 384;
+    background: currentColor;
+    mask: url("/flame.svg") center / contain no-repeat;
+  }
+
+  /* Tracking is set per size: tight on display type, none on body, a little open on small text. */
+  .h-display {
+    @apply text-[clamp(3.1rem,11.5vw,6.75rem)] leading-[0.96] font-bold tracking-[-0.035em];
+  }
+  .h-section {
+    @apply text-[clamp(2.25rem,6.4vw,4.5rem)] leading-[1.04] font-bold tracking-[-0.028em];
+  }
+  .t-small {
+    @apply text-[0.8125rem] tracking-[0.01em];
+  }
+
+  /* Floating chrome: a translucent material that content scrolls under. The blur itself is set with utilities on the element. */
+  .chrome {
+    background: color-mix(in srgb, var(--background) 78%, transparent);
+  }
+  /* A soft edge where content meets the chrome, in place of a hard divider. */
+  .chrome::after {
+    content: "";
+    position: absolute;
+    inset: 100% 0 auto;
+    height: 0.75rem;
+    pointer-events: none;
+    background: linear-gradient(color-mix(in srgb, var(--foreground) 7%, transparent), transparent);
+  }
+  @media (prefers-reduced-transparency: reduce) {
+    .chrome {
+      background: var(--background);
+      backdrop-filter: none !important;
+    }
+  }
+  @media (prefers-contrast: more) {
+    .chrome {
+      background: var(--background);
+      backdrop-filter: none !important;
+      border-bottom: 1px solid var(--foreground);
+    }
+    .chrome::after {
+      display: none;
+    }
+  }
+
+  /* Feedback on the press itself, not on release. */
+  .press {
+    transition: transform 100ms ease-out;
+  }
+  .press:active {
+    transform: scale(0.97);
+  }
+  .lede {
+    @apply text-lg leading-relaxed text-muted-foreground sm:text-[1.375rem] sm:leading-[1.5];
+  }
+  .shell {
+    @apply mx-auto w-full max-w-[68rem] px-5 sm:px-8;
+  }
+  .tile {
+    @apply rounded-[1.75rem] bg-card p-7 sm:rounded-[2rem] sm:p-10;
+  }
+  /* A card lifted off a grey section: a hairline edge and a soft, layered shadow. */
+  .raised {
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--foreground) 5%, transparent),
+      0 1px 2px rgb(0 0 0 / 0.04),
+      0 16px 36px -20px rgb(0 0 0 / 0.16);
+  }
+  /* A grey card set into a white section: a hairline edge and a faint fall of light. */
+  .inset-card {
+    background: linear-gradient(
+      color-mix(in srgb, var(--soft) 55%, var(--background)),
+      var(--soft) 55%
+    );
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--foreground) 5%, transparent);
+  }
+  /* The panel inside a card that holds its illustration. Its radius is the card's minus the gap. */
+  .stage {
+    @apply grid min-h-44 place-items-center rounded-[1.125rem] bg-soft p-6 sm:min-h-52 sm:rounded-[1.375rem];
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--foreground) 4%, transparent);
+  }
+  .dark .raised {
+    box-shadow:
+      0 0 0 1px rgb(255 255 255 / 0.07),
+      inset 0 1px 0 rgb(255 255 255 / 0.05);
+  }
+  .dark .inset-card {
+    background: linear-gradient(#232326, var(--card) 60%);
+    box-shadow:
+      inset 0 0 0 1px rgb(255 255 255 / 0.06),
+      inset 0 1px 0 rgb(255 255 255 / 0.05);
+  }
+  .dark .stage {
+    background: #111113;
+  }
+  /* A row that scrolls sideways, edge to edge, lined up with .shell. */
+  .gallery {
+    @apply flex snap-x snap-mandatory gap-4 overflow-x-auto sm:gap-5;
+    padding-inline: max(1.25rem, calc((100vw - 68rem) / 2 + 2rem));
+    scroll-padding-inline: max(1.25rem, calc((100vw - 68rem) / 2 + 2rem));
+    scrollbar-width: none;
+  }
+  .gallery::-webkit-scrollbar {
+    display: none;
+  }
+  .gallery img {
+    -webkit-user-drag: none;
+    user-select: none;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .gallery {
+      cursor: grab;
+    }
+  }
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/*
+ * Hero entrance. A script in <head> adds .anim to <html> before first paint,
+ * only when motion is allowed. These elements start slightly low and GSAP
+ * slides them into place. They are never hidden, so the hero paints at once
+ * and still reads correctly if GSAP never runs. The failsafes then settle
+ * them after three seconds.
+ */
+html.anim [data-enter] {
+  transform: translateY(1.5rem);
+  animation: settle-failsafe 0s 3s forwards;
+}
+html.anim [data-strike] {
+  transform: scaleX(0);
+  animation: settle-failsafe 0s 3s forwards;
+}
+@keyframes settle-failsafe {
+  to {
+    transform: none;
+  }
+}
+
+/* The privacy policy is ported as HTML, so it is styled by element. */
+.policy {
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  overflow-wrap: break-word;
+}
+.policy h1 {
+  font-size: clamp(2.25rem, 6vw, 3.5rem);
+  line-height: 1.02;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+.policy h1 + p {
+  margin-top: 1rem;
+  font-family: var(--font-mono);
+  color: var(--muted-foreground);
+}
+.policy h2 {
+  margin-top: 3.25rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+  font-size: 1.625rem;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  scroll-margin-top: 5rem;
+}
+.policy h3 {
+  margin-top: 2.25rem;
+  font-size: 1.1875rem;
+  font-weight: 700;
+  scroll-margin-top: 5rem;
+}
+.policy p,
+.policy ul {
+  margin-top: 1rem;
+}
+.policy ul {
+  list-style: disc;
+  padding-left: 1.25rem;
+}
+.policy li + li {
+  margin-top: 0.6rem;
+}
+.policy li::marker {
+  color: var(--primary);
+}
+.policy strong {
+  font-weight: 700;
+}
+.policy a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.policy a:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/*
+ * In-view details. <Reveal> sets data-inview="false" on itself while it waits
+ * below the fold, then "true". Each rule below is the waiting state; without
+ * the attribute (no JavaScript, reduced motion, or already on screen) the
+ * element is simply in its final state. --i staggers items in a group.
+ */
+.draw path {
+  stroke-dasharray: 1;
+  transition: stroke-dashoffset 500ms var(--ease-out) calc(var(--i, 0) * 80ms + 300ms);
+}
+[data-inview="false"] .draw path {
+  stroke-dashoffset: 1;
+}
+
+.pop {
+  transition:
+    transform 450ms var(--ease-out) calc(var(--i, 0) * 70ms + 250ms),
+    opacity 300ms var(--ease-out) calc(var(--i, 0) * 70ms + 250ms);
+}
+[data-inview="false"] .pop {
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+.rise {
+  transition: transform 800ms var(--ease-out) calc(var(--i, 0) * 60ms + 150ms);
+}
+[data-inview="false"] .rise {
+  transform: translateY(12%);
+}
+
+.slide {
+  transition:
+    transform 500ms var(--ease-out) calc(var(--i, 0) * 70ms + 350ms),
+    opacity 400ms var(--ease-out) calc(var(--i, 0) * 70ms + 350ms);
+}
+[data-inview="false"] .slide {
+  opacity: 0;
+  transform: translateX(-14px);
+}
+
+/* Changing theme cross-fades instead of flashing. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 280ms;
+  animation-timing-function: var(--ease-out);
+}
