@@ -65,6 +65,19 @@ export function Journey() {
             { scaleX: 1, ease: "none", duration: tl.duration() },
             0,
           );
+          // The backdrop moves with the scroll: the dots drift up and the glow swells.
+          tl.fromTo(
+            q("[data-dots]"),
+            { yPercent: 0 },
+            { yPercent: -32, ease: "none", duration: tl.duration() },
+            0,
+          );
+          tl.fromTo(
+            q("[data-glow]"),
+            { scale: 0.8, opacity: 0.6 },
+            { scale: 1.2, opacity: 1, ease: "none", duration: tl.duration() },
+            0,
+          );
 
           // Screens and fonts load after this runs, and move everything below.
           const refresh = () => ScrollTrigger.refresh();
@@ -129,8 +142,24 @@ export function Journey() {
               />
             </div>
           </div>
-          <div data-device aria-hidden>
-            <PhoneFrame className="h-[min(42rem,calc(100svh-8rem))] w-auto border-[#3a3a3c] shadow-[0_40px_120px_-20px_rgb(111_207_138/0.22)]">
+          <div data-device aria-hidden className="relative isolate">
+            {/*
+              Behind the phone: a glow and a field of dots. Both are centred on
+              the phone and fade out well before the text beside it.
+            */}
+            <div className="pointer-events-none absolute top-1/2 left-1/2 -z-10 size-[min(44rem,60vw)] -translate-1/2">
+              <div
+                data-glow
+                className="absolute inset-[12%] rounded-full bg-[radial-gradient(closest-side,rgb(111_207_138/0.5),transparent)]"
+              />
+              <div className="absolute inset-0 overflow-hidden rounded-full [mask-image:radial-gradient(closest-side,black_48%,transparent)]">
+                <div
+                  data-dots
+                  className="absolute inset-x-0 top-0 h-[150%] bg-[radial-gradient(circle,rgb(255_255_255/0.75)_1px,transparent_1.5px)] bg-[length:1.5rem_1.5rem]"
+                />
+              </div>
+            </div>
+            <PhoneFrame className="h-[min(42rem,calc(100svh-8rem))] w-auto border-[#3a3a3c]">
               {journey.steps.map((step) => (
                 <div key={step.src} data-shot className="absolute inset-0">
                   <Screenshot src={step.src} alt="" />

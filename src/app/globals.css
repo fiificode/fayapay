@@ -229,7 +229,7 @@
   }
   /* The panel inside a card that holds its illustration. Its radius is the card's minus the gap. */
   .stage {
-    @apply grid min-h-44 place-items-center rounded-[1.125rem] bg-soft p-6 sm:min-h-52 sm:rounded-[1.375rem];
+    @apply grid min-h-44 grid-cols-[minmax(0,1fr)] place-items-center rounded-[1.125rem] bg-soft p-4 sm:min-h-52 sm:rounded-[1.375rem] sm:p-6;
     box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--foreground) 4%, transparent);
   }
   .dark .raised {
