@@ -1,5 +1,7 @@
 # FayaPay website
 
+<!-- test-pr: verify GitHub PR workflow (2026-10-14) -->
+
 The marketing site for [FayaPay](https://fayapay.com): Next.js (App Router), Tailwind CSS, shadcn/ui, GSAP and Motion, set in Ubuntu.
 
 ## Commands
